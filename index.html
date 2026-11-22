@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Your FRESH Week</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,800&display=swap" rel="stylesheet">
+<style>
+/* VOICE: warm, calm, a friend at the bathroom sink showing you how
+   IDEA: a little care card tucked in the kit, one step per card
+   PICTURE: the routine itself: big step card with the amount drawn as drops/pumps
+   COLOUR and TYPE: white + deep teal-green, blush support, coral accent; DM Serif Display + Nunito Sans
+   LAYOUT: one phone column; tabs Today / Routine / Products; check-ins as a bottom sheet */
+:root{color-scheme:light dark;
+--bg:light-dark(#ffffff,#0f1d1b);--ink:light-dark(#16302c,#e8f0ee);--soft:light-dark(#5b6f6b,#a9bcb8);
+--deep:light-dark(#1f4d47,#2c6b62);--blush:light-dark(#f6e1d8,#2a2522);--line:light-dark(#e3e9e7,#25403b);
+--accent:light-dark(#d9573f,#f08a73);--card:light-dark(#f7faf9,#162a27)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 "Nunito Sans",system-ui,sans-serif;overflow-x:clip}
+h1,h2,h3{font-family:"DM Serif Display",Georgia,serif;font-weight:400;line-height:1.08;text-wrap:balance;margin:0}
+h1{font-size:clamp(32px,8vw,44px)}h2{font-size:28px}h3{font-size:22px}
+.wrap{max-width:620px;margin:0 auto;padding:20px max(5vw,16px) 110px}
+header.top{background:var(--deep);color:#fff;padding:26px max(5vw,16px) 30px}
+header.top .wrap{padding:0}
+header.top p{margin:6px 0 0;opacity:.85}
+.tabs{position:fixed;bottom:0;left:0;right:0;display:flex;background:var(--bg);border-top:1px solid var(--line);z-index:5;padding-bottom:env(safe-area-inset-bottom)}
+.tabs a{flex:1;text-align:center;padding:14px 4px;color:var(--soft);text-decoration:none;font-weight:600;font-size:15px;min-height:52px}
+.tabs a.on{color:var(--deep);box-shadow:inset 0 3px 0 var(--accent)}
+:root[data-theme=dark] .tabs a.on{color:#fff}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]) .tabs a.on{color:#fff}}
+.btn{display:block;width:100%;border:0;border-radius:14px;padding:16px 18px;font:800 18px "Nunito Sans",sans-serif;background:var(--accent);color:#fff;cursor:pointer;min-height:52px}
+.btn.ghost{background:transparent;color:var(--ink);border:2px solid var(--line)}
+.btn:focus-visible,.tabs a:focus-visible,button:focus-visible,textarea:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.seg{display:flex;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:4px;margin:18px 0}
+.seg button{flex:1;border:0;background:transparent;padding:12px;border-radius:10px;font:700 16px "Nunito Sans";color:var(--soft);cursor:pointer;min-height:44px}
+.seg button.on{background:var(--deep);color:#fff}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;margin:16px 0}
+.week{display:grid;grid-template-columns:auto repeat(7,minmax(0,1fr));gap:6px;align-items:center;font-size:14px}
+.week b{font-weight:600;color:var(--soft);text-align:center}
+.dot{aspect-ratio:1;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;font-size:13px;color:#fff;max-width:36px;margin:auto;width:100%}
+.dot.done{background:var(--deep);border-color:var(--deep)}
+.dot.today{border-color:var(--accent)}
+.steps-mini{list-style:none;padding:0;margin:12px 0 0;counter-reset:s}
+.steps-mini li{counter-increment:s;display:flex;gap:12px;align-items:center;padding:8px 0;border-top:1px solid var(--line)}
+.steps-mini li:first-child{border-top:0}
+.steps-mini li::before{content:counter(s);flex:none;width:30px;height:30px;border-radius:50%;background:var(--blush);color:var(--ink);display:grid;place-items:center;font-weight:800}
+.steps-mini small{display:block;color:var(--soft);font-size:14px}
+/* routine step */
+.prog{display:flex;gap:6px;margin:6px 0 18px}.prog i{flex:1;height:6px;border-radius:3px;background:var(--line)}.prog i.on{background:var(--accent)}
+.step{border-radius:22px;overflow:hidden;border:1px solid var(--line)}
+.step .hero{background:var(--blush);padding:22px 20px;display:grid;grid-template-columns:minmax(0,1fr) 110px;gap:12px;align-items:center}
+.step .hero svg{width:110px;height:130px}
+.amt{font-family:"DM Serif Display",serif;font-size:34px;line-height:1.05;color:var(--deep)}
+:root[data-theme=dark] .amt{color:#9fd3c8}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]) .amt{color:#9fd3c8}}
+.kicker{font-weight:800;color:var(--accent);font-size:15px}
+.step .body{padding:18px 20px 22px}
+.step ol{padding-left:22px;margin:10px 0}.step ol li{margin:6px 0}
+.tip{background:var(--card);border-left:4px solid var(--deep);padding:10px 14px;border-radius:0 10px 10px 0;margin-top:14px;font-size:15px}
+.row{display:flex;gap:10px;margin-top:18px}.row .btn{flex:1}
+.done-art{text-align:center;padding:30px 10px}
+/* products */
+.prod{display:grid;gap:4px}
+.facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:12px}
+.facts div{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px;font-size:13px;color:var(--soft)}
+.facts strong{display:block;color:var(--ink);font-size:16px;white-space:nowrap}
+.note{font-size:14px;color:var(--soft)}
+/* sheet */
+.veil{position:fixed;inset:0;background:rgb(0 0 0/.45);display:none;align-items:flex-end;z-index:10}
+.veil.show{display:flex}
+.sheet{background:var(--bg);width:100%;max-width:620px;margin:0 auto;border-radius:22px 22px 0 0;padding:22px max(5vw,18px) calc(22px + env(safe-area-inset-bottom))}
+.faces{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:16px 0}
+.faces button{border:2px solid var(--line);background:var(--card);border-radius:14px;padding:12px 6px;font:700 15px "Nunito Sans";color:var(--ink);cursor:pointer;min-height:84px}
+.faces button svg{display:block;margin:0 auto 6px;width:34px;height:34px}
+.faces button.on{border-color:var(--accent);background:var(--blush)}
+textarea{width:100%;font:16px "Nunito Sans";border:2px solid var(--line);border-radius:12px;padding:12px;background:var(--card);color:var(--ink);min-height:80px}
+.link{background:none;border:0;color:var(--soft);font:600 16px "Nunito Sans";padding:12px;width:100%;cursor:pointer;min-height:44px}
+footer{color:var(--soft);font-size:13px;text-align:center;margin-top:28px}
+@media(prefers-reduced-motion:no-preference){.step{animation:in .28s ease-out}@keyframes in{from{opacity:0;transform:translateX(14px)}}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap"><h1 id="hd">Your FRESH week</h1><p id="sub">Four steps, morning and night. We'll walk you through it.</p></div></header>
+<main class="wrap" id="app"></main>
+<nav class="tabs" aria-label="Sections">
+  <a href="#today" data-t="today">Today</a>
+  <a href="#routine" data-t="routine">Routine</a>
+  <a href="#products" data-t="products">Products</a>
+</nav>
+<div class="veil" id="veil" role="dialog" aria-modal="true" aria-labelledby="qTitle"><div class="sheet" id="sheet"></div></div>
+
+<script>
+{
+/* ===== EDIT HERE: product data (amounts, sizes, estimates) ===== */
+const GUIDE_FROM = "Sandy and Rich";           // name shown in the footer
+const FEEDBACK_URL = "";             // Google Sheet web-app URL goes here later; blank = answers stay on this phone
+const PRODUCTS = [
+  {id:"cleanser", step:"Cleanse", name:"FRESH cleanser", amount:"1 pump", amountNote:"enough for face, neck and décolleté", pumps:1, kind:"pump",
+   how:["Wet your face with warm water.","Put 1 pump in your palm and rub your hands together.","Massage gently over face, neck and décolleté for about 30 seconds.","Rinse with warm water and pat dry."],
+   tip:"It's gentle enough to take off eye make-up too.", size:"125 mL", lasts:"6–8 weeks", conf:"Moderate"},
+  {id:"toner", step:"Tone", name:"FRESH toner calm", amount:"5–6 sprays", amountNote:"onto your face, or onto your palms first", pumps:3, kind:"spray",
+   how:["Shake the bottle well.","Close your eyes and mist face, neck and décolleté — or spray into your palms and press on.","Keep it away from eyes and mouth.","Let it soak in for a few seconds."],
+   tip:"Pressing it on with your hands uses less than a cotton pad, so the bottle lasts longer.", size:"125 mL", lasts:"6–8 weeks", conf:"Low"},
+  {id:"serum", step:"Treat", name:"FRESH anti wrinkle serum", amount:"2 drops", amountNote:"that's all you need for face and neck", pumps:2, kind:"drop",
+   how:["Put 2 drops on your fingertips.","Warm it between your fingers.","Press and pat it over face and neck — don't rub.","Give it a moment to absorb before the cream."],
+   tip:"A little goes a long way. Patting instead of rubbing keeps more serum on your skin.", size:"30 mL", lasts:"6–10 weeks", conf:"Low"},
+  {id:"cream", step:"Moisturize", name:"FRESH cream rich", amount:"1–2 pumps", amountNote:"start with 1; add a second if your skin feels dry", pumps:2, kind:"pump",
+   how:["Put 1–2 pumps on your fingertips.","Dot it on forehead, cheeks, chin and neck.","Smooth it in with gentle upward, outward strokes.","Add a little more only on spots that still feel dry."],
+   tip:"Morning: if you'll be out in the sun, finish with your sunscreen.", size:"50 mL", lasts:"4–8 weeks", conf:"Low"}
+];
+const CHECKINS = [
+  {id:"first", when:"After your first routine", q:"How does your skin feel right now?", opts:["Not sure yet","Nice","Love it"]},
+  {id:"morning", when:"Day 2 or later, in the morning", q:"How did your skin feel when you woke up?", opts:["Same as usual","Softer","So soft!"]},
+  {id:"final", when:"When you're finishing up", q:"Would you keep using this routine?", opts:["Maybe","Probably","Absolutely"], extra:"Which step was your favorite, and would you like Sandy or Rich to follow up?"}
+];
+/* ===== end of editable data ===== */
+
+const KEY="freshWeek.v1";
+let S={start:null,log:{},answers:{},asked:{}};
+try{const raw=localStorage.getItem(KEY);if(raw)S=Object.assign(S,JSON.parse(raw))}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const dayKey=d=>d.toISOString().slice(0,10);
+const today=()=>dayKey(new Date());
+if(!S.start){S.start=today();save()}
+const dayNum=()=>Math.min(7,Math.floor((new Date(today())-new Date(S.start))/864e5)+1);
+let part=new Date().getHours()<14?"am":"pm";
+let stepIdx=0;
+const app=document.getElementById("app");
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+const icon=(kind,n)=>{ // amount picture
+  const bottle=`<rect x="34" y="40" width="42" height="80" rx="10" fill="var(--deep)"/><rect x="44" y="26" width="22" height="16" rx="3" fill="var(--deep)" opacity=".8"/><rect x="40" y="62" width="30" height="34" rx="4" fill="#fff" opacity=".9"/>`;
+  if(kind==="spray"){let m="";for(let i=0;i<n;i++)m+=`<circle cx="${86+i*7}" cy="${22+i*6}" r="${3-i*.5}" fill="var(--accent)"/>`;return `<svg viewBox="0 0 110 130" aria-hidden="true">${bottle}<rect x="62" y="16" width="16" height="8" rx="2" fill="var(--accent)"/>${m}</svg>`}
+  let d="";const c=kind==="drop"?2:n;for(let i=0;i<c;i++)d+=`<path transform="translate(${80+i*14} ${12+i*10})" d="M8 0C8 0 0 10 0 15a8 8 0 0 0 16 0C16 10 8 0 8 0z" fill="var(--accent)"/>`;
+  return `<svg viewBox="0 0 110 130" aria-hidden="true">${bottle}<path d="M55 26V10h22" stroke="var(--deep)" stroke-width="6" fill="none" stroke-linecap="round"/>${d}</svg>`};
+const face=i=>`<svg viewBox="0 0 34 34" aria-hidden="true"><circle cx="17" cy="17" r="15" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="12" cy="14" r="2" fill="currentColor"/><circle cx="22" cy="14" r="2" fill="currentColor"/><path d="${["M11 23h12","M11 22q6 4 12 0","M10 20q7 8 14 0z"][i]}" stroke="currentColor" stroke-width="2.5" fill="${i===2?"currentColor":"none"}" stroke-linecap="round"/></svg>`;
+
+const isDone=(k,p)=>!!(S.log[k]&&S.log[k][p]);
+const nextCheckin=()=>{
+  const any=Object.keys(S.log).length>0, d=dayNum();
+  if(any&&!S.answers.first&&!S.asked.first)return CHECKINS[0];
+  if(d>=2&&new Date().getHours()<14&&!S.answers.morning&&!S.asked.morning)return CHECKINS[1];
+  return null};
+
+function weekGrid(){
+  const s=new Date(S.start);let head="<span></span>",am="<b>AM</b>",pm="<b>PM</b>";
+  for(let i=0;i<7;i++){const d=new Date(s.getTime()+i*864e5),k=dayKey(d),t=k===today()?" today":"";
+    head+=`<b>${i+1}</b>`;
+    am+=`<span class="dot${isDone(k,"am")?" done":""}${t}" aria-label="Day ${i+1} morning ${isDone(k,"am")?"done":"not done"}">${isDone(k,"am")?"✓":""}</span>`;
+    pm+=`<span class="dot${isDone(k,"pm")?" done":""}${t}" aria-label="Day ${i+1} evening ${isDone(k,"pm")?"done":"not done"}">${isDone(k,"pm")?"✓":""}</span>`}
+  return `<div class="week">${head}${am}${pm}</div>`}
+
+function viewToday(){
+  const p=part==="am"?"morning":"evening", done=isDone(today(),part), ci=nextCheckin();
+  app.innerHTML=`
+  <div class="seg" role="tablist"><button data-p="am" class="${part==="am"?"on":""}">Morning</button><button data-p="pm" class="${part==="pm"?"on":""}">Evening</button></div>
+  <h2>Day ${dayNum()} · ${p}</h2>
+  <ol class="steps-mini">${PRODUCTS.map(x=>`<li><div><strong>${esc(x.step)}</strong> — ${esc(x.name)}<small>${esc(x.amount)}</small></div></li>`).join("")}</ol>
+  <div style="margin-top:18px"><button class="btn" id="go">${done?`Do the ${p} routine again`:`Start ${p} routine`}</button></div>
+  ${ci?`<div class="card"><strong>Quick check-in</strong><p class="note" style="margin:4px 0 12px">${esc(ci.q)} It takes 10 seconds.</p><button class="btn ghost" id="ci">Answer</button></div>`:""}
+  <div class="card"><h3>Your week</h3><p class="note" style="margin:4px 0 14px">Each dot is one routine.</p>${weekGrid()}</div>
+  <div class="card"><strong>Finishing up?</strong><p class="note" style="margin:4px 0 12px">Tell us what you thought before you give the kit back.</p><button class="btn ghost" id="fin">Share my thoughts</button></div>
+  ${foot()}`;
+  app.querySelectorAll(".seg button").forEach(b=>b.onclick=()=>{part=b.dataset.p;viewToday()});
+  app.querySelector("#go").onclick=()=>{stepIdx=0;location.hash="routine"};
+  const c=app.querySelector("#ci");if(c)c.onclick=()=>openCheckin(ci);
+  app.querySelector("#fin").onclick=()=>openCheckin(CHECKINS[2])}
+
+function viewRoutine(){
+  const p=part==="am"?"Morning":"Evening";
+  if(stepIdx>=PRODUCTS.length){
+    S.log[today()]=Object.assign({},S.log[today()],{[part]:true});save();
+    app.innerHTML=`<div class="done-art"><svg viewBox="0 0 120 120" width="120" height="120" aria-hidden="true"><circle cx="60" cy="60" r="54" fill="var(--blush)"/><path d="M36 62l16 16 32-34" stroke="var(--deep)" stroke-width="9" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <h2 style="margin-top:14px">${p} routine done</h2><p class="note">Nice work. That's day ${dayNum()}.</p></div>
+      <button class="btn" id="home">Back to today</button>${foot()}`;
+    app.querySelector("#home").onclick=()=>{location.hash="today"};
+    const ci=nextCheckin();if(ci)setTimeout(()=>openCheckin(ci),500);
+    return}
+  const x=PRODUCTS[stepIdx];
+  app.innerHTML=`
+  <p class="kicker" style="margin:0">${p} · step ${stepIdx+1} of ${PRODUCTS.length}</p>
+  <div class="prog">${PRODUCTS.map((_,i)=>`<i class="${i<=stepIdx?"on":""}"></i>`).join("")}</div>
+  <article class="step">
+    <div class="hero"><div><p class="kicker" style="margin:0 0 4px">${esc(x.step)}</p><h3>${esc(x.name)}</h3><div class="amt" style="margin-top:10px">${esc(x.amount)}</div><p class="note" style="margin:4px 0 0">${esc(x.amountNote)}</p></div>${icon(x.kind,x.pumps)}</div>
+    <div class="body"><strong>How to apply</strong><ol>${x.how.map(h=>`<li>${esc(h)}</li>`).join("")}</ol><div class="tip">${esc(x.tip)}</div></div>
+  </article>
+  <div class="row">${stepIdx>0?`<button class="btn ghost" id="back">Back</button>`:""}<button class="btn" id="next">${stepIdx===PRODUCTS.length-1?"Finish":"Next step"}</button></div>
+  ${foot()}`;
+  app.querySelector("#next").onclick=()=>{stepIdx++;viewRoutine();scrollTo(0,0)};
+  const b=app.querySelector("#back");if(b)b.onclick=()=>{stepIdx--;viewRoutine();scrollTo(0,0)}}
+
+function viewProducts(){
+  app.innerHTML=`<h2>Your four products</h2>
+  <p class="note">If you buy the full sizes, here's roughly how long each one may last with morning and evening use. Using the amounts shown helps them last longer. Actual use varies.</p>
+  ${PRODUCTS.map((x,i)=>`<div class="card prod"><p class="kicker" style="margin:0">Step ${i+1} · ${esc(x.step)}</p><h3>${esc(x.name)}</h3>
+    <div class="facts"><div>Each time<strong>${esc(x.amount)}</strong></div><div>Full size<strong>${esc(x.size)}</strong></div><div>May last<strong>${esc(x.lasts)}</strong></div></div>
+    <p class="note" style="margin:10px 0 0">${esc(x.tip)}</p></div>`).join("")}
+  <p class="note">Estimates come from typical twice-daily use and are not manufacturer figures.</p>${foot()}`}
+
+function openCheckin(ci){
+  S.asked[ci.id]=true;save();let pick=null;
+  const sh=document.getElementById("sheet");
+  sh.innerHTML=`<p class="kicker" style="margin:0">Quick check-in · optional</p><h3 id="qTitle" style="margin-top:4px">${esc(ci.q)}</h3>
+  <div class="faces">${ci.opts.map((o,i)=>`<button data-i="${i}">${face(i)}${esc(o)}</button>`).join("")}</div>
+  <label class="note" for="cm">${esc(ci.extra||"Anything you'd like to add? (optional)")}</label>
+  <textarea id="cm" placeholder="Type here…"></textarea>
+  <div style="margin-top:14px"><button class="btn" id="send">Send</button></div><button class="link" id="skip">Skip for now</button>
+  <p class="note" style="text-align:center;margin:0">Your answers go only to ${esc(GUIDE_FROM)}.</p>`;
+  sh.querySelectorAll(".faces button").forEach(b=>b.onclick=()=>{pick=+b.dataset.i;sh.querySelectorAll(".faces button").forEach(o=>o.classList.toggle("on",o===b))});
+  const close=()=>{document.getElementById("veil").classList.remove("show");route()};
+  sh.querySelector("#skip").onclick=close;
+  sh.querySelector("#send").onclick=()=>{
+    const a={id:ci.id,rating:pick===null?"":ci.opts[pick],comment:sh.querySelector("#cm").value.trim(),day:dayNum(),at:new Date().toISOString()};
+    S.answers[ci.id]=a;save();
+    if(FEEDBACK_URL){try{fetch(FEEDBACK_URL,{method:"POST",mode:"no-cors",body:JSON.stringify(a)})}catch(e){}}
+    sh.innerHTML=`<h3>Thank you!</h3><p class="note">That really helps ${esc(GUIDE_FROM)}.</p><button class="btn" id="ok">Done</button>`;
+    sh.querySelector("#ok").onclick=close};
+  document.getElementById("veil").classList.add("show")}
+
+function foot(){return `<footer>Your FRESH home guide from ${esc(GUIDE_FROM)}.<br>An independent guide, not an official RINGANA app.</footer>`}
+
+function route(){
+  const t=(location.hash||"#today").slice(1);
+  document.querySelectorAll(".tabs a").forEach(a=>a.classList.toggle("on",a.dataset.t===t));
+  if(t==="routine")viewRoutine();else if(t==="products")viewProducts();else viewToday()}
+addEventListener("hashchange",()=>{if(location.hash==="#routine"&&stepIdx>=PRODUCTS.length)stepIdx=0;route()});
+document.getElementById("veil").onclick=e=>{if(e.target.id==="veil"){e.currentTarget.classList.remove("show")}};
+route();
+}
+</script>
+</body>
+</html>
